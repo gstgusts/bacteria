@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Product details</title>
+</head>
+<body>
+<h1 th:text="${'Product details:' + product.getName()}"></h1>
+
+<table>
+    <tr>
+        <th>Bacteria</th>
+        <th>Limit</th>
+        <th>Value</th>
+    </tr>
+    <tr th:each="item: ${testResults}">
+        <td th:text="${item.getBacteriaName()}"></td>
+        <td th:text="${item.getCategoryLimit()}"></td>
+        <td>&nbsp;</td>
+    </tr>
+</table>
+
+</body>
+</html>

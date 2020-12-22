@@ -19,4 +19,8 @@ public class Product {
 
     @Column(name = "name")
     private String name;
+
+    @OneToOne(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
+    @JoinColumn(name = "category_id", referencedColumnName = "id")
+    private Category category;
 }
