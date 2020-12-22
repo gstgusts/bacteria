@@ -19,13 +19,40 @@ public class TestDataManager {
 
           var limitations = repo.getCategoryLimitations(categoryId);
 
+          var testResults = repo.getTestResultItems(productId);
+
         List<TestResultDto> items = new ArrayList<>();
 
         for (var limitation :
                 limitations) {
-            items.add(new TestResultDto(limitation.getBacteria().getName(), limitation.getLimitation(), 0));
+            items.add(mapTestResult(limitation, testResults));
         }
 
           return items;
+    }
+
+    private TestResultDto mapTestResult(Limitation limitation, Iterable<TestResultItem> testResults) {
+
+        List<TestResultItem> items = new ArrayList<>();
+
+        for (var result :
+                testResults) {
+            items.add(result);
+        }
+
+        var testItem = items.stream().filter(i->i.getBacteria().getId() == limitation.getBacteria().getId()).findFirst();
+
+        var bacteriaName = limitation.getBacteria().getName();
+        var categoryLimitation = limitation.getLimitation();
+        var testValue = 0;
+
+        if(testItem.isPresent()) {
+            var test = testItem.get();
+            bacteriaName = test.getBacteriaName();
+            categoryLimitation = test.getCategoryLimit();
+            testValue = test.getTestValue();
+        }
+
+        return new TestResultDto(bacteriaName, categoryLimitation, testValue);
     }
 }

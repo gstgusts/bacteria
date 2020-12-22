@@ -2,10 +2,14 @@ package com.example.bacteria;
 
 import com.example.bacteria.data.DataRepository;
 import com.example.bacteria.data.TestDataManager;
+import com.example.bacteria.dto.TestUpdateDto;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class MainController {
@@ -33,5 +37,11 @@ public class MainController {
         model.addAttribute("testResults", testDataManager.getTestResults(id));
 
         return "product_details";
+    }
+
+    @PostMapping("/products/{id}")
+    public ModelAndView saveTestPosition(@PathVariable int id, @ModelAttribute("testResult")TestUpdateDto updateDto) {
+
+      return new ModelAndView("redirect:/products/"+id);
     }
 }

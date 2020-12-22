@@ -17,6 +17,7 @@ public class DataRepository {
                     addAnnotatedClass(Category.class).
                     addAnnotatedClass(Limitation.class).
                     addAnnotatedClass(Product.class).
+                    addAnnotatedClass(TestResultItem.class).
                     buildSessionFactory();
         } catch (Throwable ex) {
             System.err.println("Failed to create sessionFactory object." + ex);
@@ -59,6 +60,24 @@ public class DataRepository {
             var sql = "FROM Limitation where category_id = :catId";
             var query = session.createQuery(sql);
             query.setParameter("catId", categoryId);
+            var result = query.list();
+            return result;
+        } catch (HibernateException exception) {
+            System.err.println(exception);
+        } finally {
+            session.close();
+        }
+
+        return new ArrayList<>();
+    }
+
+    public Iterable<TestResultItem> getTestResultItems(int productId) {
+        var session = factory.openSession();
+
+        try {
+            var sql = "FROM TestResultItem where product_id = :prodId";
+            var query = session.createQuery(sql);
+            query.setParameter("prodId", productId);
             var result = query.list();
             return result;
         } catch (HibernateException exception) {

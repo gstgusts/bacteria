@@ -17,7 +17,12 @@
     <tr th:each="item: ${testResults}">
         <td th:text="${item.getBacteriaName()}"></td>
         <td th:text="${item.getCategoryLimit()}"></td>
-        <td>&nbsp;</td>
+        <td>
+            <form name="testResult" th:action="${'/products/' + product.getId()}" method="post">
+                <input type="number" th:value="${item.getValue()}" name="testValue">
+                <input type="submit" value="Save">
+            </form>
+        </td>
     </tr>
 </table>
 
