@@ -1,16 +1,20 @@
 package com.example.bacteria;
 
+import com.example.bacteria.data.Bacteria;
 import com.example.bacteria.data.DataRepository;
 import com.example.bacteria.data.TestDataManager;
 import com.example.bacteria.data.TestResultItem;
 import com.example.bacteria.dto.TestUpdateDto;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
+
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.stream.Collectors;
 
 @Controller
 public class MainController {
@@ -28,6 +32,44 @@ public class MainController {
 
         return "index";
     }
+
+    @GetMapping("file_upload")
+    public String uploadFile(Model model) {
+        return "file_upload";
+    }
+
+    @PostMapping("file_upload")
+    public String saveFile(@RequestParam("file") MultipartFile file, ModelMap modelMap) {
+
+        try {
+            String s = new String(file.getBytes(), StandardCharsets.UTF_8);
+
+            var lines = s.lines();
+            var listOfLines = lines.collect(Collectors.toList());
+
+            for (var line :
+                    listOfLines) {
+
+                var parts = line.split(",");
+
+                var bac = new Bacteria(Integer.valueOf(parts[0]), parts[1]);
+
+                if(bac.getId() == 0) {
+                    repo.add(bac);
+                } else {
+                    repo.save(bac);
+                }
+
+                System.out.println(line);
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return "file_upload";
+    }
+
 
     @GetMapping("/products/{id}")
     public String productDetails(@PathVariable int id, Model model) {
