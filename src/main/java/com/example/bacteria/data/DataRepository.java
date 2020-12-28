@@ -1,7 +1,9 @@
 package com.example.bacteria.data;
 
+import lombok.NonNull;
 import org.hibernate.HibernateException;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 
 import java.util.ArrayList;
@@ -53,6 +55,20 @@ public class DataRepository {
         return null;
     }
 
+    public Bacteria getBacteria(int id) {
+        var session = factory.openSession();
+
+        try {
+            return session.get(Bacteria.class, id);
+        } catch (HibernateException exception) {
+            System.err.println(exception);
+        } finally {
+            session.close();
+        }
+
+        return null;
+    }
+
     public Iterable<Limitation> getCategoryLimitations(int categoryId) {
         var session = factory.openSession();
 
@@ -88,4 +104,42 @@ public class DataRepository {
 
         return new ArrayList<>();
     }
+
+    public void save(@NonNull Object item) {
+        var session = factory.openSession();
+        Transaction tx = null;
+
+        try {
+            tx = session.beginTransaction();
+            session.update(item);
+            tx.commit();
+        } catch (HibernateException exception) {
+            if(tx != null) {
+                tx.rollback();
+            }
+            System.err.println(exception);
+        } finally {
+            session.close();
+        }
+    }
+
+    public void add(@NonNull Object item) {
+        var session = factory.openSession();
+        Transaction tx = null;
+
+        try {
+            tx = session.beginTransaction();
+            session.save(item);
+            tx.commit();
+        } catch (HibernateException exception) {
+            if(tx != null) {
+                tx.rollback();
+            }
+            System.err.println(exception);
+        } finally {
+            session.close();
+        }
+    }
+
+
 }

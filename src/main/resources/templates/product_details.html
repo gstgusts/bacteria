@@ -20,6 +20,10 @@
         <td>
             <form name="testResult" th:action="${'/products/' + product.getId()}" method="post">
                 <input type="number" th:value="${item.getValue()}" name="testValue">
+                <input type="hidden" th:value="${item.getId()}" name="testId">
+                <input type="hidden" th:value="${item.getBacteriaId()}" name="bacteriaId">
+                <input type="hidden" th:value="${item.getBacteriaName()}" name="bacteriaName">
+                <input type="hidden" th:value="${item.getCategoryLimit()}" name="categoryLimit">
                 <input type="submit" value="Save">
             </form>
         </td>
